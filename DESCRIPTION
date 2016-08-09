@@ -1,0 +1,19 @@
+Package: IMFData
+Type: Package
+Title: R Interface for IMF Data
+Version: 0.1
+Date: 2016-08-05
+Authors@R: person("Ming-Jer", "Lee", email = "mingjerli@gmail.com",
+                  role = c("aut", "cre"))
+Depends:
+    R (>= 3.3.0)
+Imports:
+    httr,
+    jsonlite,
+    plyr,
+    dplyr
+Description: Search, extract and formulate IMF's datasets.
+License: GPL (>=2)
+LazyData: TRUE
+KeepSource: TRUE
+RoxygenNote: 5.0.1
