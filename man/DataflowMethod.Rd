@@ -2,16 +2,17 @@
 % Please edit documentation in R/IMFData.R
 \name{DataflowMethod}
 \alias{DataflowMethod}
-\title{Get list of available datasets from API}
+\title{Get List of Available Datasets from API}
 \usage{
 DataflowMethod()
 }
 \value{
 \code{DataflowMethod} returns a data frame object to describe
-available datasets from the API. The data frame includes the following
-components
-DatabaseID Database ID uses for making API call
-DatabaseText Database description.
+available datasets from IMF data API. This data frame includes the following
+two columns:
+
+DatabaseID - Database ID uses for making API call \cr
+DatabaseText - Database description
 }
 \description{
 \code{DataflowMethod} returns a data frame with availble
@@ -21,6 +22,5 @@ datasets
 availableDB <- DataflowMethod()
 availableDB
 availableDB$DatabaseID[1]
-
 }
 

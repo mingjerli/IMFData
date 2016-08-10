@@ -2,22 +2,25 @@
 % Please edit documentation in R/IMFData.R
 \name{DataStructureMethod}
 \alias{DataStructureMethod}
-\title{Get list of dimension}
+\title{Get List of Dimension of a Given Dataset}
 \usage{
 DataStructureMethod(databaseID, checkquery = FALSE)
 }
 \arguments{
-\item{databaseID}{string. Database ID of the dataset. Obtained from \code{DataflowMethod}}
+\item{databaseID}{string. Database ID of the dataset. Obtained from \code{DataflowMethod}.}
 
 \item{checkquery}{logical. If true, it will check the database ID is available or not.}
 }
 \value{
 \code{DataStructureMethod} returns a list of data frame to describe available dimensions in the dataset.
 The name of the list is the dimension name.
-Each element of the list is a data frame with two columns; CodeValue for dimension code and CodeText for dimension description.
+Each element of the list is a data frame with two columns;
+
+CodeValue - dimension code used for \code{CompactDataMethod}. \cr
+CodeText - dimension description.
 }
 \description{
-\code{DataStructureMethod} get the data structure of dataset
+\code{DataStructureMethod} get the data structure of dataset with available code and description for each dimension.
 }
 \examples{
 available.codes <- DataStructureMethod('IFS')

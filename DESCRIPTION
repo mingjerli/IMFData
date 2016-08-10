@@ -13,7 +13,7 @@ Imports:
     plyr,
     dplyr
 Description: Search, extract and formulate IMF's datasets.
-License: GPL (>=2)
+License: MIT
 LazyData: TRUE
 KeepSource: TRUE
 RoxygenNote: 5.0.1

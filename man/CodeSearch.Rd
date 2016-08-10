@@ -2,7 +2,7 @@
 % Please edit documentation in R/IMFData.R
 \name{CodeSearch}
 \alias{CodeSearch}
-\title{Code Search}
+\title{Search Available Code in a Dimension of a Given Dataset}
 \usage{
 CodeSearch(available.codes, code, searchtext, search.value = TRUE,
   search.text = TRUE)
@@ -10,13 +10,13 @@ CodeSearch(available.codes, code, searchtext, search.value = TRUE,
 \arguments{
 \item{available.codes}{string. Database ID of the dataset.}
 
-\item{code}{string. If true, it will check the database ID is available or not.}
+\item{code}{string. Dimension code get from \code{DataStructureMethod}.}
 
-\item{searchtext}{string. Database ID of the dataset.}
+\item{searchtext}{string. String to search in the dimension code.}
 
-\item{search.value}{logical. If true, it will search only the .}
+\item{search.value}{logical. If true, it will search \code{searchtext} in \code{CodeValue}.}
 
-\item{search.text}{logical. If true, it will search .}
+\item{search.text}{logical. If true, it will search \code{searchtext} in \code{CodeText}.}
 }
 \value{
 A list for each dimension.
@@ -24,16 +24,14 @@ The name of the list is the dimension name.
 Each element of the list is a data frame with two columns; dimension code and dimension text(description).
 }
 \description{
-\code{CodeSearch} search
+\code{CodeSearch} search matching codes in a given dimension of a dataset
 }
 \examples{
-IFS.available.codes <- DataStructureMethod('IFS')
-names(IFS.available.codes)
-IFS.available.codes[[1]]
-CodeSearch(IFS.available.codes, 'CLL', 'GDP')
-CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP')
-nrow(CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP'))
-nrow(CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'employ'))
-nrow(CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'employaaaaaaaaa'))
+IFS.available.codes <- DataStructureMethod('IFS') # Get dimension code of IFS dataset
+names(IFS.available.codes) # Available dimension code
+IFS.available.codes[[1]] # Possible code in the first dimension
+CodeSearch(IFS.available.codes, 'CLL', 'GDP') # Error (CLL is not a dimension code of IFS dataset)
+CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP') # Search code contains GDP
+CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDPABCDE') # NULL (cannot find GDPABCDE in CL_INDICATOR_IFS dimension)
 }
 
