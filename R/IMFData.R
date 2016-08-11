@@ -23,7 +23,7 @@
 
 DataflowMethod <- function(){
   r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/')
-  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
+  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
   available.datasets <- r.parsed$Structure$KeyFamilies$KeyFamily
   available.datasets.id <- available.datasets$`@id`
   available.datasets.text <- available.datasets$Name$`#text`
@@ -69,7 +69,7 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
     return(list())
   }
 
-  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
+  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
   dim.code <- r.parsed$Structure$KeyFamilies$KeyFamily$Components$Dimension$`@codelist`
   dim.code.list<- r.parsed$Structure$CodeLists$CodeList$Code
   names(dim.code.list) <- r.parsed$Structure$CodeLists$CodeList$`@id`
@@ -180,7 +180,7 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
     stop(paste(unlist(httr::http_status(r))))
     return(list())
   }
-  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
+  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
 
   if(is.null(r.parsed$CompactData$DataSet$Series)){
     warning("No data available")
