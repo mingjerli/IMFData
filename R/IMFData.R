@@ -17,6 +17,8 @@
 #' DatabaseText - Database description
 #'
 #' @example demo/demoDataflowMethod.R
+#' @import httr
+#' @import jsonlite
 #' @export
 
 DataflowMethod <- function(){
@@ -48,6 +50,9 @@ DataflowMethod <- function(){
 #' CodeText - dimension description.
 #'
 #' @example  demo/demoDataStructureMethod.R
+#' @import httr
+#' @import jsonlite
+#' @import plyr
 #' @export
 
 DataStructureMethod <- function(databaseID, checkquery = FALSE){
@@ -92,6 +97,8 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
 #' Each element of the list is a data frame with two columns; dimension code and dimension text(description).
 #'
 #' @example demo/demoCodeSearch.R
+#' @import httr
+#' @import jsonlite
 #' @export
 
 CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, search.text = TRUE){
@@ -137,6 +144,9 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' @return A data frame. The last column, \code{Obs}, is a time series data
 #' described by other columns.
 #' @example demo/demoCompactDataMethod.R
+#' @import httr
+#' @import plyr
+#' @import jsonlite
 #' @export
 
 CompactDataMethod <- function(databaseID, queryfilter=NULL,
