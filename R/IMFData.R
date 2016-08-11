@@ -1,9 +1,8 @@
 ## roxygen2::roxygenise()
 
-library(plyr)
-library(dplyr)
-library(httr)
-library(jsonlite)
+# library(plyr)
+# library(httr)
+# library(jsonlite)
 
 #' @title Get List of Available Datasets from API
 #'
@@ -21,8 +20,8 @@ library(jsonlite)
 #' @export
 
 DataflowMethod <- function(){
-  r <- GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/')
-  r.parsed <- fromJSON(content(r, "text"))
+  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/')
+  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
   available.datasets <- r.parsed$Structure$KeyFamilies$KeyFamily
   available.datasets.id <- available.datasets$`@id`
   available.datasets.text <- available.datasets$Name$`#text`
@@ -60,12 +59,12 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
     }
   }
 
-  r <- GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID))
-  if(http_status(r)$reason != "OK"){
+  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID))
+  if(httr::http_status(r)$reason != "OK"){
     return(list())
   }
 
-  r.parsed <- fromJSON(content(r, "text"))
+  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
   dim.code <- r.parsed$Structure$KeyFamilies$KeyFamily$Components$Dimension$`@codelist`
   dim.code.list<- r.parsed$Structure$CodeLists$CodeList$Code
   names(dim.code.list) <- r.parsed$Structure$CodeLists$CodeList$`@id`
@@ -163,15 +162,15 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
       unlist(plyr::llply(queryfilter,
                          function(x)(paste0(x, collapse="+")))), collapse=".")
   }
-  r <- GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
+  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
                   databaseID,'/',queryfilterstr,
                   '?startPeriod=',startdate,'&endPeriod=',enddate))
 
-  if(http_status(r)$reason != "OK"){
-    stop(paste(unlist(http_status(r))))
+  if(httr::http_status(r)$reason != "OK"){
+    stop(paste(unlist(httr::http_status(r))))
     return(list())
   }
-  r.parsed <- fromJSON(content(r, "text"))
+  r.parsed <- jsonlite::fromJSON(jsonlite::content(r, "text"))
 
   if(is.null(r.parsed$CompactData$DataSet$Series)){
     warning("No data available")
@@ -179,7 +178,7 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
   }
 
   if(class(r.parsed$CompactData$DataSet$Series) == "data.frame"){
-    r.parsed$CompactData$DataSet$Series <- r.parsed$CompactData$DataSet$Series[!laply(r.parsed$CompactData$DataSet$Series$Obs, is.null),]
+    r.parsed$CompactData$DataSet$Series <- r.parsed$CompactData$DataSet$Series[!plyr::laply(r.parsed$CompactData$DataSet$Series$Obs, is.null),]
     if(nrow(r.parsed$CompactData$DataSet$Series) ==0){
       warning("No data available")
       return(NULL)
