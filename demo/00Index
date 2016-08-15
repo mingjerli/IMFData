@@ -1,4 +1,4 @@
-demoCodeSearch            R code for searching related dimensional code of a given dataset
-demoCompactDataMethod     R code for making query
-demoDataflowMethod        R code for searching available datasets
-demoDataStructureMethod   R code for getting information of dimension of a given dataset
+demoCodeSearch             R code for searching related dimensional code of a given dataset
+demoCompactDataMethod      R code for making query
+demoDataflowMethod         R code for searching available datasets
+demoDataStructureMethod    R code for getting information of dimension of a given dataset
