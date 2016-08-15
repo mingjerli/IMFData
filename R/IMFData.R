@@ -1,8 +1,3 @@
-## roxygen2::roxygenise()
-
-# library(plyr)
-# library(httr)
-# library(jsonlite)
 
 #' @title Get List of Available Datasets from API
 #'

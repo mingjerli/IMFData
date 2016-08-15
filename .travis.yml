@@ -1,0 +1,9 @@
+sudo: falsesudo: false
+
+language: r
+r:
+  - oldre1
+  - release
+  - devel
+
+cache: packages
