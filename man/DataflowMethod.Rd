@@ -19,8 +19,10 @@ DatabaseText - Database description
 datasets
 }
 \examples{
+\donttest{
 availableDB <- DataflowMethod()
 availableDB
 availableDB$DatabaseID[1]
+}
 }
 

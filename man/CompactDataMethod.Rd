@@ -33,6 +33,7 @@ only return incomplete data because of API limit. In this case, try to add
 more constraints in the filter.
 }
 \examples{
+\donttest{
 databaseID <- 'IFS'
 startdate='2001-01-01'
 enddate='2016-12-31'
@@ -86,6 +87,7 @@ queryfilter <- list(CL_FREQ = "", CL_AREA_DOT="US", CL_INDICATOR_DOT = "", CL_CO
 US.query <- CompactDataMethod('DOT', queryfilter, startdate, enddate, FALSE)
 US.query[1:5,1:(length(US.query)-1)]
 US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
+}
 
 }
 

@@ -23,8 +23,11 @@ CodeText - dimension description.
 \code{DataStructureMethod} get the data structure of dataset with available code and description for each dimension.
 }
 \examples{
+\donttest{
 available.codes <- DataStructureMethod('IFS')
 names(available.codes)
-available.codes[[1]]
+available.codes[[1]]#'
+}
+
 }
 
