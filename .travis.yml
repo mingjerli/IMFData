@@ -1,4 +1,4 @@
-sudo: falsesudo: false
+sudo: false
 
 language: r
 r:
