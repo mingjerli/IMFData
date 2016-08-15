@@ -1,41 +1,49 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-IMFData
-=======
+---
+output: 
+  md_document:
+    variant: markdown_github
+---
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# IMFData
 [![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData)
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
 IMFData is an R package to access [IMF (Internation Monetary of Fund) data](http://data.imf.org) . It has three main goals:
 
--   Findout available datasets in the API.
--   Findout the dataset datastructure and code to use to make a query.
--   Query through the API.
+* Findout available datasets in the API.
+* Findout the dataset datastructure and code to use to make a query.
+* Query through the API.
 
-Installation
-------------
 
-Right now, you can install
+## Installation
+Right now, you can install 
 
--   the latest development version from github with
+* the latest development version from github with
+```R
+devtools::install_github('mingjerli/IMFData')
+```
 
-    ``` r
-    devtools::install_github('mingjerli/IMFData')
-    ```
-
-Loading the package
--------------------
-
-``` r
+## Loading the package
+```R
 library(IMFData)
 ```
 
-How to use IMFData
-------------------
+## How to use IMFData
 
-If you don't know anything about [IMF data](http://data.imf.org) API, the following four steps is a good way to start.
+If you don't know anything about [IMF data](http://data.imf.org) API, the following four steps is a good way to start. 
 
-### Findout available dataset in [IMF data](http://data.imf.org).
+### Findout available dataset in [IMF data](http://data.imf.org). 
 
-``` r
+```R
 availableDB <- DataflowMethod()
 availableDB
 availableDB$DatabaseID[1]
@@ -43,7 +51,7 @@ availableDB$DatabaseID[1]
 
 ### Findout how many dimension available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
 
-``` r
+```R
 # Get dimension code of IFS dataset
 IFS.available.codes <- DataStructureMethod('IFS')
 # Available dimension code
@@ -52,16 +60,16 @@ names(IFS.available.codes)
 IFS.available.codes[[1]] 
 ```
 
-### Search possible code to use in each dimension. Here, we want to search code related to GDP in CL\_INDICATOR\_IFS dimension,
+### Search possible code to use in each dimension. Here, we want to search code related to GDP in CL_INDICATOR_IFS dimension,
 
-``` r
+```R
 # Search code contains GDP
 CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP') 
 ```
 
-### Make API call to get data,
+### Make API call to get data, 
 
-``` r
+```R
 databaseID <- 'IFS'
 startdate='2001-01-01'
 enddate='2016-12-31'
@@ -80,3 +88,4 @@ Q.US.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate
 Q.US.NGDP.query[,1:5]
 Q.US.NGDP.query$Obs[[1]]
 ```
+

@@ -63,7 +63,7 @@ CodeSearch(IFS.available.codes, "CL_INDICATOR_IFS", "FITB_3M_PA") # Reverse look
 ## Quarterly, USA, GDP related
 IFS.available.codes <- DataStructureMethod('IFS')
 ALLGDPCodeValue <- CodeSearch(IFS.available.codes, "CL_INDICATOR_IFS","GDP")$CodeValue
-queryfilter <- list(CL_FREA="Q", CL_AREA_IFS="US", CL_INDICATOR_IFS =ALLGDPCodeValue[1:10]) # Looks like I can have 17 code at once maximum
+queryfilter <- list(CL_FREA="Q", CL_AREA_IFS="US", CL_INDICATOR_IFS =ALLGDPCodeValue[1:10])
 Q.US.GDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
 Q.US.GDP.query[,1:5]
 Q.US.GDP.query$Obs[[1]]
@@ -83,7 +83,8 @@ M.NGDP.query$Obs # NULL
 ## Example for DOT dataset
 DOT.available.codes <- DataStructureMethod('DOT')
 names(DOT.available.codes)
-queryfilter <- list(CL_FREQ = "", CL_AREA_DOT="US", CL_INDICATOR_DOT = "", CL_COUNTERPART_AREA_DOT="")
+queryfilter <- list(CL_FREQ = "", CL_AREA_DOT="US",
+                    CL_INDICATOR_DOT = "", CL_COUNTERPART_AREA_DOT="")
 US.query <- CompactDataMethod('DOT', queryfilter, startdate, enddate, FALSE)
 US.query[1:5,1:(length(US.query)-1)]
 US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
