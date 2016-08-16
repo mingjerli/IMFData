@@ -2,7 +2,7 @@
 IMFData
 =======
 
-[![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData)
+[![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/IMFData)](http://cran.r-project.org/package=IMFData)
 
 IMFData is an R package to access [IMF (Internation Monetary of Fund) data](http://data.imf.org) . It has three main goals:
 
@@ -14,6 +14,12 @@ Installation
 ------------
 
 Right now, you can install
+
+-   from CRAN with
+
+    ``` r
+    install.packages('IMFData')
+    ```
 
 -   the latest development version from github with
 

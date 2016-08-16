@@ -8,6 +8,7 @@ output:
 
 # IMFData
 [![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/IMFData)](http://cran.r-project.org/package=IMFData)
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -26,6 +27,11 @@ IMFData is an R package to access [IMF (Internation Monetary of Fund) data](http
 
 ## Installation
 Right now, you can install 
+
+* from CRAN with
+```R
+install.packages('IMFData')
+```
 
 * the latest development version from github with
 ```R

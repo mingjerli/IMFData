@@ -11,3 +11,6 @@ warnings_are_errors: false
 env:
   global:
     - _R_CHECK_FORCE_SUGGESTS_=false
+
+after_success:
+  bash <(curl -s https://codecov.io/bash)
