@@ -39,7 +39,7 @@ devtools::install_github('mingjerli/IMFData')
 ```
 
 ## Loading the package
-```R
+```{r, cache=TRUE}
 library(IMFData)
 ```
 
@@ -49,15 +49,15 @@ If you don't know anything about [IMF data](http://data.imf.org) API, the follow
 
 ### Findout available dataset in [IMF data](http://data.imf.org). 
 
-```R
+```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 availableDB <- DataflowMethod()
-availableDB
-availableDB$DatabaseID[1]
+availableDB$DatabaseID
+availableDB$DatabaseText
 ```
 
 ### Findout how many dimension available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
 
-```R
+```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 # Get dimension code of IFS dataset
 IFS.available.codes <- DataStructureMethod('IFS')
 # Available dimension code
@@ -68,14 +68,14 @@ IFS.available.codes[[1]]
 
 ### Search possible code to use in each dimension. Here, we want to search code related to GDP in CL_INDICATOR_IFS dimension,
 
-```R
+```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 # Search code contains GDP
 CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP') 
 ```
 
 ### Make API call to get data, 
 
-```R
+```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 databaseID <- 'IFS'
 startdate='2001-01-01'
 enddate='2016-12-31'
