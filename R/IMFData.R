@@ -162,6 +162,7 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' @param enddate string. End date in format of "YYYY-mm-dd".
 #' @param checkquery logical. If true, it will check the database ID is
 #' available or not.
+#' @param verbose logical. If true, it will print the exact API call.
 #'
 #' @return A data frame. The last column, \code{Obs}, is a time series data
 #' described by other columns.
@@ -231,7 +232,7 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 
 CompactDataMethod <- function(databaseID, queryfilter=NULL,
                               startdate='2001-01-01', enddate='2001-12-31',
-                              checkquery = FALSE){
+                              checkquery = FALSE, verbose=FALSE){
   if(checkquery){
     available.datasets <- DataflowMethod()$DatabaseID
     if (!is.element(databaseID, available.datasets)){
@@ -252,9 +253,17 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
       unlist(plyr::llply(queryfilter,
                          function(x)(paste0(x, collapse="+")))), collapse=".")
   }
-  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
-                  databaseID,'/',queryfilterstr,
-                  '?startPeriod=',startdate,'&endPeriod=',enddate))
+
+  APIstr <- paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
+                    databaseID,'/',queryfilterstr,
+                    '?startPeriod=',startdate,'&endPeriod=',enddate)
+  r <- httr::GET(APIstr)
+
+  if(verbose){
+    cat('\nmaking API call:\n')
+    cat(APIstr)
+    cat('\n')
+  }
 
   if(httr::http_status(r)$reason != "OK"){
     stop(paste(unlist(httr::http_status(r))))
