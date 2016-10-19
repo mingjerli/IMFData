@@ -5,7 +5,8 @@
 \title{Make Query to Get Data from the API}
 \usage{
 CompactDataMethod(databaseID, queryfilter = NULL, startdate = "2001-01-01",
-  enddate = "2001-12-31", checkquery = FALSE)
+  enddate = "2001-12-31", checkquery = FALSE, verbose = FALSE,
+  tidy = FALSE)
 }
 \arguments{
 \item{databaseID}{A character string. Database ID for the dataset. Can be
@@ -21,6 +22,10 @@ NULL, no filter has been set.}
 
 \item{checkquery}{logical. If true, it will check the database ID is
 available or not.}
+
+\item{verbose}{logical. If true, it will print the exact API call.}
+
+\item{tidy}{logical. If true, it will return a simple data fram.}
 }
 \value{
 A data frame. The last column, \code{Obs}, is a time series data
@@ -89,6 +94,11 @@ US.query <- CompactDataMethod('DOT', queryfilter, startdate, enddate, FALSE)
 US.query[1:5,1:(length(US.query)-1)]
 US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
 }
+
+## Example for verbose and tidy
+queryfilter <- list(CL_FREA="", CL_AREA_IFS="GR", CL_INDICATOR_IFS =c("NGDP_EUR","NGDP_XDC"))
+CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose=TRUE)
+CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy=TRUE)
 
 }
 

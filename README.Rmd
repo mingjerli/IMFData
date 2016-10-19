@@ -93,5 +93,12 @@ queryfilter <- list(CL_FREA="Q", CL_AREA_IFS="US", CL_INDICATOR_IFS ="NGDP_SA_AR
 Q.US.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
 Q.US.NGDP.query[,1:5]
 Q.US.NGDP.query$Obs[[1]]
+
+## See exact API call to the data source
+CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose=TRUE)$Obs[[1]]
+
+## Return a simple data frame
+head(CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy=TRUE))
+
 ```
 

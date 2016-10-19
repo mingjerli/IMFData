@@ -163,6 +163,7 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' @param checkquery logical. If true, it will check the database ID is
 #' available or not.
 #' @param verbose logical. If true, it will print the exact API call.
+#' @param tidy logical. If true, it will return a simple data fram.
 #'
 #' @return A data frame. The last column, \code{Obs}, is a time series data
 #' described by other columns.
@@ -225,6 +226,11 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
 #' }
 #'
+#' ## Example for verbose and tidy
+#' queryfilter <- list(CL_FREA="", CL_AREA_IFS="GR", CL_INDICATOR_IFS =c("NGDP_EUR","NGDP_XDC"))
+#' CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose=TRUE)
+#' CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy=TRUE)
+#'
 #' @import httr
 #' @import plyr
 #' @import jsonlite
@@ -232,7 +238,7 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 
 CompactDataMethod <- function(databaseID, queryfilter=NULL,
                               startdate='2001-01-01', enddate='2001-12-31',
-                              checkquery = FALSE, verbose=FALSE){
+                              checkquery = FALSE, verbose=FALSE, tidy=FALSE){
   if(checkquery){
     available.datasets <- DataflowMethod()$DatabaseID
     if (!is.element(databaseID, available.datasets)){
@@ -293,6 +299,15 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
     ret.df$Obs <- list(r.parsed$CompactData$DataSet$Series$Obs)
     names(ret.df) <- names(r.parsed$CompactData$DataSet$Series)
     r.parsed$CompactData$DataSet$Series <- ret.df
+  }
+
+  if(tidy){
+    ret.df <- r.parsed$CompactData$DataSet$Series
+    for(i in 1:length(ret.df$Obs)){
+      ret.df$Obs[[i]] <- merge(ret.df$Obs[[i]], ret.df[i,1:(ncol(ret.df)-1)])
+    }
+    ret.df <- plyr::ldply(ret.df$Obs)
+    return(ret.df)
   }
 
   return(r.parsed$CompactData$DataSet$Series)
