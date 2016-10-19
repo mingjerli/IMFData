@@ -53,6 +53,13 @@ GR.NGDP.query[,1:5]
 GR.NGDP.query$Obs[[1]]
 GR.NGDP.query$Obs[[2]]
 
+## Example for verbose
+GR.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, verbose=TRUE)
+
+## Example for tidy
+GR.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, tidy=TRUE)
+head(GR.NGDP.query)
+
 ## Quarterly, Germany, Norminal GDP in Euros, Norminal GDP in National Currency
 queryfilter <- list(CL_FREA="Q", CL_AREA_IFS="GR", CL_INDICATOR_IFS =c("NGDP_EUR","NGDP_XDC"))
 Q.GR.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
@@ -94,11 +101,6 @@ US.query <- CompactDataMethod('DOT', queryfilter, startdate, enddate, FALSE)
 US.query[1:5,1:(length(US.query)-1)]
 US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
 }
-
-## Example for verbose and tidy
-queryfilter <- list(CL_FREA="", CL_AREA_IFS="GR", CL_INDICATOR_IFS =c("NGDP_EUR","NGDP_XDC"))
-CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose=TRUE)
-CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy=TRUE)
 
 }
 

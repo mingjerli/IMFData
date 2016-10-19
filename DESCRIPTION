@@ -1,8 +1,8 @@
 Package: IMFData
 Type: Package
 Title: R Interface for International Monetary Fund(IMF) Data API
-Version: 0.1.0
-Date: 2016-08-15
+Version: 0.2.0
+Date: 2016-10-16
 Authors@R: person("Ming-Jer", "Lee", email = "mingjerli@gmail.com",
                   role = c("aut", "cre"))
 Depends:
