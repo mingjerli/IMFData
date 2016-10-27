@@ -6,7 +6,7 @@ Date: 2016-10-16
 Authors@R: person("Ming-Jer", "Lee", email = "mingjerli@gmail.com",
                   role = c("aut", "cre"))
 Depends:
-    R (>= 3.3.0)
+    R (>= 3.1.0)
 Imports:
     httr,
     jsonlite,
