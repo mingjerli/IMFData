@@ -2,12 +2,12 @@
 IMFData
 =======
 
-[![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/IMFData)](http://cran.r-project.org/package=IMFData)
+[![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/IMFData)](https://cran.r-project.org/package=IMFData)
 
-IMFData is an R package to access [IMF (Internation Monetary of Fund) data](http://data.imf.org) . It has three main goals:
+IMFData is an R package to access [IMF (Internation Monetary Fund) data](http://data.imf.org) . It has three main goals:
 
--   Findout available datasets in the API.
--   Findout the dataset datastructure and code to use to make a query.
+-   Find out available datasets in the API.
+-   Find out the dataset datastructure and code to use to make a query.
 -   Query through the API.
 
 Installation
@@ -39,7 +39,7 @@ How to use IMFData
 
 If you don't know anything about [IMF data](http://data.imf.org) API, the following four steps is a good way to start.
 
-### Findout available dataset in [IMF data](http://data.imf.org).
+### Find out available dataset in [IMF data](http://data.imf.org).
 
 ``` r
 availableDB <- DataflowMethod()
@@ -132,7 +132,7 @@ availableDB$DatabaseText
 #> [68] "Balance of Payments (BOP), Global SDMX (US Dollars)"
 ```
 
-### Findout how many dimension available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
+### Findout how many dimensions are available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
 
 ``` r
 # Get dimension code of IFS dataset
@@ -234,7 +234,7 @@ CodeSearch(IFS.available.codes, "CL_INDICATOR_IFS", "GDP")
 #> 2671                                                                                                      All Indicators Excluding NGDP Indicators
 ```
 
-### Make API call to get data,
+### Make API call to get data
 
 ``` r
 databaseID <- "IFS"

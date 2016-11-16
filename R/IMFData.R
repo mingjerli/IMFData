@@ -26,8 +26,8 @@
 DataflowMethod <- function(){
   r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/')
   r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
-  available.datasets <- r.parsed$Structure$KeyFamilies$KeyFamily
-  available.datasets.id <- available.datasets$`@id`
+  available.datasets <- r.parsed$Structure$Dataflows$Dataflow
+  available.datasets.id <- available.datasets$KeyFamilyRef$KeyFamilyID
   available.datasets.text <- available.datasets$Name$`#text`
   available.db <- data.frame(
     DatabaseID = available.datasets.id,

@@ -8,7 +8,7 @@ output:
 
 # IMFData
 [![Build Status](http://travis-ci.org/mingjerli/IMFData.png?branch=master)](https://travis-ci.org/mingjerli/IMFData)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/IMFData)](http://cran.r-project.org/package=IMFData)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/IMFData)](https://cran.r-project.org/package=IMFData)
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -18,10 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-IMFData is an R package to access [IMF (Internation Monetary of Fund) data](http://data.imf.org) . It has three main goals:
+IMFData is an R package to access [IMF (Internation Monetary Fund) data](http://data.imf.org) . It has three main goals:
 
-* Findout available datasets in the API.
-* Findout the dataset datastructure and code to use to make a query.
+* Find out available datasets in the API.
+* Find out the dataset datastructure and code to use to make a query.
 * Query through the API.
 
 
@@ -47,7 +47,7 @@ library(IMFData)
 
 If you don't know anything about [IMF data](http://data.imf.org) API, the following four steps is a good way to start. 
 
-### Findout available dataset in [IMF data](http://data.imf.org). 
+### Find out available dataset in [IMF data](http://data.imf.org). 
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 availableDB <- DataflowMethod()
@@ -55,7 +55,7 @@ availableDB$DatabaseID
 availableDB$DatabaseText
 ```
 
-### Findout how many dimension available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
+### Findout how many dimensions are available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 # Get dimension code of IFS dataset
@@ -73,7 +73,7 @@ IFS.available.codes[[1]]
 CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP') 
 ```
 
-### Make API call to get data, 
+### Make API call to get data
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 databaseID <- 'IFS'
