@@ -24,7 +24,7 @@
 #' @export
 
 DataflowMethod <- function(){
-  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/')
+  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/', httr::add_headers('user-agent' = ''))
   r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
   available.datasets <- r.parsed$Structure$Dataflows$Dataflow
   available.datasets.id <- available.datasets$KeyFamilyRef$KeyFamilyID
@@ -74,7 +74,7 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
     }
   }
 
-  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID))
+  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID), httr::add_headers('user-agent' = ''))
   if(httr::http_status(r)$reason != "OK"){
     return(list())
   }
@@ -265,7 +265,7 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
   APIstr <- paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
                     databaseID,'/',queryfilterstr,
                     '?startPeriod=',startdate,'&endPeriod=',enddate)
-  r <- httr::GET(APIstr)
+  r <- httr::GET(APIstr, httr::add_headers('user-agent' = ''))
 
   if(verbose){
     cat('\nmaking API call:\n')
