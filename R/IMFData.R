@@ -24,7 +24,7 @@
 #' @export
 
 DataflowMethod <- function(){
-  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow/', httr::add_headers('user-agent' = ''))
+  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow', httr::add_headers('user-agent' = ''))
   r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
   available.datasets <- r.parsed$Structure$Dataflows$Dataflow
   available.datasets.id <- available.datasets$KeyFamilyRef$KeyFamilyID
