@@ -26,9 +26,9 @@
 DataflowMethod <- function(){
   r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow', httr::add_headers('user-agent' = ''))
   r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
-  available.datasets <- r.parsed$Structure$Dataflows$Dataflow
-  available.datasets.id <- available.datasets$KeyFamilyRef$KeyFamilyID
-  available.datasets.text <- available.datasets$Name$`#text`
+  available.datasets <- r.parsed$Structure$Dataflows$Dataflow$KeyFamilyRef
+  available.datasets.id <- available.datasets$KeyFamilyID
+  available.datasets.text <- r.parsed$Structure$Dataflows$Dataflow$Name
   available.db <- data.frame(
     DatabaseID = available.datasets.id,
     DatabaseText = available.datasets.text,
@@ -248,7 +248,7 @@ CompactDataMethod <- function(databaseID, queryfilter=NULL,
       return(NULL)
     }
     acceptedquery <- DataStructureMethod(databaseID)
-    if (length(queryfilter) !=0 ||
+    if (length(queryfilter) !=0 &
         length(queryfilter) != length(acceptedquery)){
       stop('queryfilter is wrong format')
       return(NULL)
