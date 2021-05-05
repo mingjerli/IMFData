@@ -4,12 +4,14 @@
 \alias{DataStructureMethod}
 \title{Get List of Dimension of a Given Dataset}
 \usage{
-DataStructureMethod(databaseID, checkquery = FALSE)
+DataStructureMethod(databaseID, checkquery = FALSE, ...)
 }
 \arguments{
 \item{databaseID}{string. Database ID of the dataset. Obtained from \code{DataflowMethod}.}
 
 \item{checkquery}{logical. If true, it will check the database ID is available or not.}
+
+\item{...}{parametres to pass to a curl handle (`?curl::handle_setopt`).}
 }
 \value{
 \code{DataStructureMethod} returns a list of data frame to describe available dimensions in the dataset.
@@ -23,11 +25,10 @@ CodeText - dimension description.
 \code{DataStructureMethod} get the data structure of dataset with available code and description for each dimension.
 }
 \examples{
-\donttest{
+\dontrun{
 available.codes <- DataStructureMethod('IFS')
 names(available.codes)
 available.codes[[1]]#'
 }
 
 }
-

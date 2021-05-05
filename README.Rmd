@@ -51,8 +51,8 @@ If you don't know anything about [IMF data](http://data.imf.org) API, the follow
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 availableDB <- DataflowMethod()
-availableDB$DatabaseID
-availableDB$DatabaseText
+sample_lines <- sample.int(nrow(availableDB), 10)
+availableDB[sample_lines, ]
 ```
 
 ### Findout how many dimensions are available in a given dataset. Here, we use IFS(International Financial Statistics) for example,
@@ -70,35 +70,37 @@ IFS.available.codes[[1]]
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 # Search code contains GDP
-CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP') 
+all_gdp_codes <- CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDP')
+sample_lines <- sample.int(nrow(all_gdp_codes), 10)
+all_gdp_codes[sample_lines, ]
 ```
 
 ### Make API call to get data
 
 ```{r, echo = TRUE, tidy=TRUE, cache=TRUE}
 databaseID <- 'IFS'
-startdate='2001-01-01'
-enddate='2016-12-31'
-checkquery = FALSE
+startdate <- '2001-01-01'
+enddate <- '2016-12-31'
+checkquery <- FALSE
 
 ## Germany, Norminal GDP in Euros, Norminal GDP in National Currency
-queryfilter <- list(CL_FREA="", CL_AREA_IFS="GR", CL_INDICATOR_IFS =c("NGDP_EUR","NGDP_XDC"))
-GR.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
-GR.NGDP.query[,1:5]
-GR.NGDP.query$Obs[[1]]
-GR.NGDP.query$Obs[[2]]
+queryfilter <- list(CL_FREA = "", CL_AREA_IFS = "DE", CL_INDICATOR_IFS = c("NGDP_EUR","NGDP_XDC"))
+DE.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
+DE.NGDP.query[,1:5]
+tail(DE.NGDP.query$Obs[[1]])
+tail(DE.NGDP.query$Obs[[2]])
 
-## Quarterly, US, NGDP_SA_AR_XDC
-queryfilter <- list(CL_FREA="Q", CL_AREA_IFS="US", CL_INDICATOR_IFS ="NGDP_SA_AR_XDC")
+## Quarterly, US, NGDP_SA_XDC
+queryfilter <- list(CL_FREA = "Q", CL_AREA_IFS = "US", CL_INDICATOR_IFS = "NGDP_SA_XDC")
 Q.US.NGDP.query <- CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery)
 Q.US.NGDP.query[,1:5]
-Q.US.NGDP.query$Obs[[1]]
+tail(Q.US.NGDP.query$Obs[[1]])
 
 ## See exact API call to the data source
-CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose=TRUE)$Obs[[1]]
+tail(CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, verbose = TRUE)$Obs[[1]])
 
 ## Return a simple data frame
-head(CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy=TRUE))
+head(CompactDataMethod(databaseID, queryfilter, startdate, enddate, checkquery, tidy = TRUE))
 
 ```
 

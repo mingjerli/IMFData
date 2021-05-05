@@ -6,6 +6,8 @@
 #' @description \code{DataflowMethod} returns a data frame with availble
 #' datasets
 #'
+#' @param ... parametres to pass to a curl handle (`?curl::handle_setopt`).
+#'
 #' @return \code{DataflowMethod} returns a data frame object to describe
 #' available datasets from IMF data API. This data frame includes the following
 #' two columns:
@@ -14,18 +16,23 @@
 #' DatabaseText - Database description
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' availableDB <- DataflowMethod()
 #' availableDB
 #' availableDB$DatabaseID[1]
 #' }
-#' @import httr
-#' @import jsonlite
+#'
 #' @export
 
-DataflowMethod <- function(){
-  r <- httr::GET('http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow', httr::add_headers('user-agent' = ''))
-  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
+DataflowMethod <- function(...){
+  h <- curl::new_handle()
+  h <- curl::handle_setopt(h, ...)
+
+  r <- curl::curl_fetch_memory(url = 'http://dataservices.imf.org/REST/SDMX_JSON.svc/Dataflow', handle = h)
+  is_json <- log_query(r)
+  if (is_json[[1]]) stop(is_json[[2]])
+  r.parsed <- jsonlite::fromJSON(rawToChar(r$content))
+
   available.datasets <- r.parsed$Structure$Dataflows$Dataflow
   available.datasets.id <- available.datasets$KeyFamilyRef$KeyFamilyID
   available.datasets.text <- available.datasets$Name$`#text`
@@ -34,6 +41,7 @@ DataflowMethod <- function(){
     DatabaseText = available.datasets.text,
     stringsAsFactors = FALSE
   )
+
   return(available.db)
 }
 
@@ -45,6 +53,7 @@ DataflowMethod <- function(){
 #'
 #' @param databaseID string. Database ID of the dataset. Obtained from \code{DataflowMethod}.
 #' @param checkquery logical. If true, it will check the database ID is available or not.
+#' @param ... parametres to pass to a curl handle (`?curl::handle_setopt`).
 #'
 #' @return \code{DataStructureMethod} returns a list of data frame to describe available dimensions in the dataset.
 #' The name of the list is the dimension name.
@@ -54,41 +63,42 @@ DataflowMethod <- function(){
 #' CodeText - dimension description.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' available.codes <- DataStructureMethod('IFS')
 #' names(available.codes)
 #' available.codes[[1]]#'
 #' }
 #'
-#' @import httr
-#' @import jsonlite
-#' @import plyr
 #' @export
 
-DataStructureMethod <- function(databaseID, checkquery = FALSE){
-  # return a list with all dimension and legitimate values of each diemnsion
-  if(checkquery){
-    available.datasets <- DataflowMethod()$DatabaseID
-    if (!is.element(databaseID, available.datasets)){
+DataStructureMethod <- function(databaseID, checkquery = FALSE, ...){
+  # return a list with all dimension and legitimate values of each dimension
+  if (checkquery) {
+    available.datasets <- DataflowMethod(...)$DatabaseID
+    if (!is.element(databaseID, available.datasets)) {
       return(NULL)
     }
   }
 
-  r <- httr::GET(paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID), httr::add_headers('user-agent' = ''))
-  if(httr::http_status(r)$reason != "OK"){
-    return(list())
-  }
+  h <- curl::new_handle()
+  h <- curl::handle_setopt(h, ...)
 
-  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
-  dim.code <- r.parsed$Structure$KeyFamilies$KeyFamily$Components$Dimension$`@codelist`
-  dim.code.list<- r.parsed$Structure$CodeLists$CodeList$Code
-  names(dim.code.list) <- r.parsed$Structure$CodeLists$CodeList$`@id`
-  dim.code.list <- dim.code.list[dim.code]
-  dim.code.list <- plyr::llply(dim.code.list,
-                               function(x){
-                                 data.frame(CodeValue = x$`@value`,
-                                            CodeText = x$Description$`#text`,
-                                            stringsAsFactors = FALSE)})
+  r <- curl::curl_fetch_memory(url = paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/DataStructure/',databaseID), handle = h)
+  is_json <- log_query(r)
+  if (is_json[[1]]) stop(is_json[[2]])
+  r.parsed <- jsonlite::fromJSON(rawToChar(r$content))
+
+  dim.code.list <- structure(
+    r.parsed$Structure$CodeLists$CodeList$Code,
+    names = r.parsed$Structure$CodeLists$CodeList$`@id`
+  )[r.parsed$Structure$KeyFamilies$KeyFamily$Components$Dimension$`@codelist`]
+
+  dim.code.list <- purrr::map(dim.code.list,
+                              function(x){
+                                data.frame(CodeValue = x$`@value`,
+                                           CodeText = x$Description$`#text`,
+                                           stringsAsFactors = FALSE)})
+
   return(dim.code.list)
 }
 
@@ -109,7 +119,7 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
 #' Each element of the list is a data frame with two columns; dimension code and dimension text(description).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' IFS.available.codes <- DataStructureMethod('IFS') # Get dimension code of IFS dataset
 #' names(IFS.available.codes) # Available dimension code
 #' IFS.available.codes[[1]] # Possible code in the first dimension
@@ -118,29 +128,30 @@ DataStructureMethod <- function(databaseID, checkquery = FALSE){
 #' CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDPABCDE') # NULL
 #' }
 #'
-#' @import httr
-#' @import jsonlite
 #' @export
 
 CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, search.text = TRUE){
-  if( ! is.element(code, names(available.codes))){
+  if (!is.element(code, names(available.codes))) {
     stop(paste0("Code, ", code, ", does not exist."))
   }
 
   match.index <- c()
-  if(search.value){
+
+  if (search.value) {
     code.value.match <- grep(searchtext, available.codes[[code]]$CodeValue)
     match.index <- unique(c(match.index, code.value.match))
   }
-  if(search.text){
+
+  if (search.text) {
     code.text.match <- grep(searchtext, available.codes[[code]]$CodeText)
     match.index <- unique(c(match.index, code.text.match))
   }
 
-  if(length(match.index) == 0){
+  if (length(match.index) == 0) {
     warning('no match!')
     return(NULL)
   }
+
   return(available.codes[[code]][match.index,])
 }
 
@@ -163,13 +174,14 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' @param checkquery logical. If true, it will check the database ID is
 #' available or not.
 #' @param verbose logical. If true, it will print the exact API call.
-#' @param tidy logical. If true, it will return a simple data fram.
+#' @param tidy logical. If true, it will return a simple data frame.
+#' @param ... parametres to pass to a curl handle (`?curl::handle_setopt`).
 #'
 #' @return A data frame. The last column, \code{Obs}, is a time series data
 #' described by other columns.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' databaseID <- 'IFS'
 #' startdate='2001-01-01'
 #' enddate='2016-12-31'
@@ -233,84 +245,108 @@ CodeSearch <- function(available.codes, code, searchtext, search.value = TRUE, s
 #' US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
 #' }
 #'
-#' @import httr
-#' @import plyr
-#' @import jsonlite
 #' @export
 
 CompactDataMethod <- function(databaseID, queryfilter=NULL,
                               startdate='2001-01-01', enddate='2001-12-31',
-                              checkquery = FALSE, verbose=FALSE, tidy=FALSE){
-  if(checkquery){
-    available.datasets <- DataflowMethod()$DatabaseID
-    if (!is.element(databaseID, available.datasets)){
+                              checkquery = FALSE, verbose=FALSE, tidy=FALSE,
+                              ...){
+
+  if (checkquery) {
+    available.datasets <- DataflowMethod(...)$DatabaseID
+    if  (!is.element(databaseID, available.datasets)) {
       stop('databaseID is not exist in API')
       return(NULL)
     }
-    acceptedquery <- DataStructureMethod(databaseID)
-    if (length(queryfilter) !=0 ||
-        length(queryfilter) != length(acceptedquery)){
+
+    acceptedquery <- DataStructureMethod(databaseID, ...)
+    if (length(queryfilter) != 0 ||
+        length(queryfilter) != length(acceptedquery)) {
       stop('queryfilter is wrong format')
       return(NULL)
     }
   }
 
   queryfilterstr <- ''
-  if (length(queryfilter) > 0){
+  if (length(queryfilter) > 0) {
     queryfilterstr <- paste0(
-      unlist(plyr::llply(queryfilter,
-                         function(x)(paste0(x, collapse="+")))), collapse=".")
+      purrr::map_chr(queryfilter,
+                     function(x) paste0(x, collapse = "+")),
+      collapse = ".")
   }
 
   APIstr <- paste0('http://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/',
                     databaseID,'/',queryfilterstr,
                     '?startPeriod=',startdate,'&endPeriod=',enddate)
-  r <- httr::GET(APIstr, httr::add_headers('user-agent' = ''))
 
-  if(verbose){
+  if (verbose) {
     cat('\nmaking API call:\n')
     cat(APIstr)
     cat('\n')
   }
 
-  if(httr::http_status(r)$reason != "OK"){
-    stop(paste(unlist(httr::http_status(r))))
-    return(list())
-  }
-  r.parsed <- jsonlite::fromJSON(httr::content(r, "text"))
+  h <- curl::new_handle()
+  h <- curl::handle_setopt(h, ...)
 
-  if(is.null(r.parsed$CompactData$DataSet$Series)){
+  r <- curl::curl_fetch_memory(url = APIstr, handle = h)
+  is_json <- log_query(r)
+  if (is_json[[1]]) stop(is_json[[2]])
+  r.parsed <- jsonlite::fromJSON(rawToChar(r$content))
+
+  if (is.null(r.parsed$CompactData$DataSet$Series)) {
     warning("No data available")
     return(NULL)
   }
 
-  if(class(r.parsed$CompactData$DataSet$Series) == "data.frame"){
-    r.parsed$CompactData$DataSet$Series <- r.parsed$CompactData$DataSet$Series[!plyr::laply(r.parsed$CompactData$DataSet$Series$Obs, is.null),]
-    if(nrow(r.parsed$CompactData$DataSet$Series) ==0){
+  if (class(r.parsed$CompactData$DataSet$Series) == "data.frame") {
+    r.parsed$CompactData$DataSet$Series <- r.parsed$CompactData$DataSet$Series[!purrr::map_lgl(r.parsed$CompactData$DataSet$Series$Obs, is.null),]
+    if (nrow(r.parsed$CompactData$DataSet$Series) == 0) {
       warning("No data available")
       return(NULL)
     }
   }
 
-  if(class(r.parsed$CompactData$DataSet$Series) == "list"){
-    if(is.null(r.parsed$CompactData$DataSet$Series$Obs)){
+  if (class(r.parsed$CompactData$DataSet$Series) == "list") {
+    if (is.null(r.parsed$CompactData$DataSet$Series$Obs)) {
       warning("No data available")
       return(NULL)
     }
-    ret.df <- as.data.frame(r.parsed$CompactData$DataSet$Series[1:(length(r.parsed$CompactData$DataSet$Series)-1)])
+
+    ret.df <- as.data.frame(r.parsed$CompactData$DataSet$Series[1:(length(r.parsed$CompactData$DataSet$Series) - 1)])
     ret.df$Obs <- list(r.parsed$CompactData$DataSet$Series$Obs)
     names(ret.df) <- names(r.parsed$CompactData$DataSet$Series)
     r.parsed$CompactData$DataSet$Series <- ret.df
   }
 
-  if(tidy){
+  if (tidy) {
     ret.df <- r.parsed$CompactData$DataSet$Series
-    for(i in 1:length(ret.df$Obs)){
-      ret.df$Obs[[i]] <- merge(ret.df$Obs[[i]], ret.df[i,1:(ncol(ret.df)-1)])
+    for (i in 1:length(ret.df$Obs)) {
+      ret.df$Obs[[i]] <- merge(ret.df$Obs[[i]], ret.df[i,1:(ncol(ret.df) - 1)])
     }
-    ret.df <- plyr::ldply(ret.df$Obs)
+    ret.df <- dplyr::bind_rows(ret.df$Obs)
     return(ret.df)
   }
 
   return(r.parsed$CompactData$DataSet$Series)
+}
+
+#' @title log the result of a query if not json
+#'
+#' @description \code{log_query} write the query result to html file and returns TRUE and a stop message if the result
+#' is not a JSON file.
+#'
+#' @return \code{log_query} returns TRUE and a stop message if the result
+#' is not a JSON file or FALSE and an empty string
+#'
+#' @noRd
+
+log_query <- function(r) {
+  if (rawToChar(r$content[1]) != '{') {
+    filename <- tempfile('IMFData_querylog_', fileext = '.html')
+    writeLines(rawToChar(r$content), filename)
+
+    return(list(TRUE, paste0('The query output is not formated JSON. The query output logged in the file : ', filename)))
+  }
+
+  return(list(FALSE, ''))
 }

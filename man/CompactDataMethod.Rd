@@ -4,9 +4,16 @@
 \alias{CompactDataMethod}
 \title{Make Query to Get Data from the API}
 \usage{
-CompactDataMethod(databaseID, queryfilter = NULL, startdate = "2001-01-01",
-  enddate = "2001-12-31", checkquery = FALSE, verbose = FALSE,
-  tidy = FALSE)
+CompactDataMethod(
+  databaseID,
+  queryfilter = NULL,
+  startdate = "2001-01-01",
+  enddate = "2001-12-31",
+  checkquery = FALSE,
+  verbose = FALSE,
+  tidy = FALSE,
+  ...
+)
 }
 \arguments{
 \item{databaseID}{A character string. Database ID for the dataset. Can be
@@ -25,7 +32,9 @@ available or not.}
 
 \item{verbose}{logical. If true, it will print the exact API call.}
 
-\item{tidy}{logical. If true, it will return a simple data fram.}
+\item{tidy}{logical. If true, it will return a simple data frame.}
+
+\item{...}{parametres to pass to a curl handle (`?curl::handle_setopt`).}
 }
 \value{
 A data frame. The last column, \code{Obs}, is a time series data
@@ -38,7 +47,7 @@ only return incomplete data because of API limit. In this case, try to add
 more constraints in the filter.
 }
 \examples{
-\donttest{
+\dontrun{
 databaseID <- 'IFS'
 startdate='2001-01-01'
 enddate='2016-12-31'
@@ -103,4 +112,3 @@ US.query$Obs[[1]] # Monthly. US. TMG_CIF_USD CH
 }
 
 }
-

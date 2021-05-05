@@ -4,7 +4,10 @@
 \alias{DataflowMethod}
 \title{Get List of Available Datasets from API}
 \usage{
-DataflowMethod()
+DataflowMethod(...)
+}
+\arguments{
+\item{...}{parametres to pass to a curl handle (`?curl::handle_setopt`).}
 }
 \value{
 \code{DataflowMethod} returns a data frame object to describe
@@ -19,10 +22,10 @@ DatabaseText - Database description
 datasets
 }
 \examples{
-\donttest{
+\dontrun{
 availableDB <- DataflowMethod()
 availableDB
 availableDB$DatabaseID[1]
 }
-}
 
+}
