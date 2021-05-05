@@ -1,19 +1,24 @@
 Package: IMFData
 Type: Package
 Title: R Interface for International Monetary Fund(IMF) Data API
-Version: 0.2.0
-Date: 2016-10-16
+Version: 0.3.0
+Date: 2021-05-05
 Authors@R: person("Ming-Jer", "Lee", email = "mingjerli@gmail.com",
                   role = c("aut", "cre"))
 Depends:
     R (>= 3.1.0)
 Imports:
-    httr,
+    dplyr,
+    curl,
     jsonlite,
-    plyr
+    purrr
 Description: Search, extract and formulate IMF's datasets.
 License: MIT + file LICENSE
 LazyData: TRUE
 KeepSource: TRUE
 URL: https://github.com/mingjerli/IMFData
-RoxygenNote: 5.0.1
+RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

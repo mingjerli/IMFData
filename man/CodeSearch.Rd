@@ -4,8 +4,13 @@
 \alias{CodeSearch}
 \title{Search Available Code in a Dimension of a Given Dataset}
 \usage{
-CodeSearch(available.codes, code, searchtext, search.value = TRUE,
-  search.text = TRUE)
+CodeSearch(
+  available.codes,
+  code,
+  searchtext,
+  search.value = TRUE,
+  search.text = TRUE
+)
 }
 \arguments{
 \item{available.codes}{string. Database ID of the dataset.}
@@ -27,7 +32,7 @@ Each element of the list is a data frame with two columns; dimension code and di
 \code{CodeSearch} search matching codes in a given dimension of a dataset
 }
 \examples{
-\donttest{
+\dontrun{
 IFS.available.codes <- DataStructureMethod('IFS') # Get dimension code of IFS dataset
 names(IFS.available.codes) # Available dimension code
 IFS.available.codes[[1]] # Possible code in the first dimension
@@ -37,4 +42,3 @@ CodeSearch(IFS.available.codes, 'CL_INDICATOR_IFS', 'GDPABCDE') # NULL
 }
 
 }
-
